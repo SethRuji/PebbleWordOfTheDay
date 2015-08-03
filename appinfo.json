@@ -1,0 +1,27 @@
+{
+    "appKeys": {
+        "minutes": 2,
+        "quit": 3,
+        "ready": 0,
+        "text": 1
+    },
+    "capabilities": [
+        ""
+    ],
+    "companyName": "hedgehogs265",
+    "longName": "Word of the Day",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "Word of the Day",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "2cbcd2fb-22db-498e-8adb-0e781de6006c",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
