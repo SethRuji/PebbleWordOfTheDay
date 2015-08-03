@@ -1,13 +1,18 @@
 #include <pebble.h>
-static Window *window;
-static SimpleMenuLayer *menu_layer_main;
-
+#include "text_layer_word.h"
 
 #define PEBBLE_WIDTH 144
 #define PEBBLE_HEIGHT 168
-static SimpleMenuSection s_menu_sections[2];
-
-static char text[256];
+#define NUM_MENU_SECTIONS 1
+#define	NUM_FIRST_MENU_ITEMS 3
+#define	NUM_MENU_SECTIONS 1
+	
+static Window *window;
+static SimpleMenuLayer *menu_layer_main;
+static SimpleMenuItem s_menu_items[NUM_FIRST_MENU_ITEMS];
+static SimpleMenuSection s_menu_sections[NUM_MENU_SECTIONS];
+	
+static char text_buffer[256];
 
 enum {
   APP_KEY_READY,
@@ -16,10 +21,43 @@ enum {
   APP_KEY_QUIT,
 };
 
-static void window_load(Window *window) {
-  Layer *window_layer = window_get_root_layer(window);
-	menu_layer_main = simple_menu_layer_create(GRect(0, 0, PEBBLE_WIDTH, PEBBLE_HEIGHT));
+static void menu_select_callback(int index, void *ctx) {
+  s_menu_items[index].subtitle = "You've hit select here!";
+  layer_mark_dirty(simple_menu_layer_get_layer(menu_layer_main));
+}
+
+static void today_word_callback(int index, void *ctx){
+	show_text_layer_word();
+}
+
+static void window_load(Window *window) {	
+	int num_a_items = 0;
+
+  s_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "Today's Word",
+    .callback = today_word_callback,
+  };
+  s_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "History",
+    .subtitle = "Here's a subtitle",
+    .callback = menu_select_callback,
+  };
+	s_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "Settings",
+    .callback = menu_select_callback,
+  };
 	
+	s_menu_sections[0] = (SimpleMenuSection) {
+    .num_items = NUM_FIRST_MENU_ITEMS,
+    .items = s_menu_items,
+  };
+	
+	Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_frame(window_layer);
+	
+	//Add simple menu layer
+	menu_layer_main = simple_menu_layer_create(bounds, window, s_menu_sections, NUM_MENU_SECTIONS, NULL);
+	menu_layer_set_highlight_colors(simple_menu_layer_get_menu_layer(menu_layer_main), GColorVividCerulean, GColorWhite);
   layer_add_child(window_layer, simple_menu_layer_get_layer(menu_layer_main));
 }
 
@@ -57,7 +95,7 @@ void process_tuple(Tuple *t){
     case APP_KEY_READY:
       APP_LOG(APP_LOG_LEVEL_INFO, "Got 'app key ready' message!");
 			check_launch_args();
-			request_word();
+//			request_word();
       break;
     /*case APP_KEY_TEXT:
 		 	APP_LOG(APP_LOG_LEVEL_INFO, "Got 'app key text' message!");
