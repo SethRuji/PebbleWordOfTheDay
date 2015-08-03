@@ -27,6 +27,7 @@ static void menu_select_callback(int index, void *ctx) {
 }
 
 static void today_word_callback(int index, void *ctx){
+	
 	show_text_layer_word();
 }
 
